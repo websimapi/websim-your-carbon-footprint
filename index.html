@@ -1,0 +1,386 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Carbon Footprint</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #006400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        button {
+            background-color: #006400;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        button:hover {
+            background-color: #004d00;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+
+        .footprint-visual {
+            width: 100%;
+            height: 300px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #footprintSvg {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .stat {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .comparison {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .comparison-item {
+            text-align: center;
+            margin: 10px;
+            flex: 1 1 30%;
+        }
+
+        .tips {
+            margin-top: 30px;
+            padding: 15px;
+            background: #e6f7e6;
+            border-radius: 5px;
+        }
+
+        .tips h3 {
+            color: #006400;
+            margin-top: 0;
+        }
+
+        ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .comparison-item {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculate Your Carbon Footprint</h1>
+        
+        <div class="form-group">
+            <label for="transportation">Transportation (km per week)</label>
+            <input type="range" id="transportation" min="0" max="1000" value="100" step="10">
+            <div class="slider-labels">
+                <span>0 km</span>
+                <span>500 km</span>
+                <span>1000 km</span>
+            </div>
+            <div id="transportationValue">100 km per week</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="diet">Diet Type</label>
+            <select id="diet" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                <option value="vegan">Vegan</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="pescatarian">Pescatarian</option>
+                <option value="omnivore" selected>Omnivore</option>
+                <option value="highMeat">High Meat Consumption</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="energy">Monthly Energy Consumption (kWh)</label>
+            <input type="range" id="energy" min="0" max="1000" value="250" step="10">
+            <div class="slider-labels">
+                <span>0 kWh</span>
+                <span>500 kWh</span>
+                <span>1000 kWh</span>
+            </div>
+            <div id="energyValue">250 kWh per month</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="flights">Number of Flights per Year</label>
+            <input type="range" id="flights" min="0" max="20" value="2" step="1">
+            <div class="slider-labels">
+                <span>0</span>
+                <span>10</span>
+                <span>20</span>
+            </div>
+            <div id="flightsValue">2 flights per year</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="goods">Monthly Spending on Consumer Goods ($)</label>
+            <input type="range" id="goods" min="0" max="2000" value="300" step="50">
+            <div class="slider-labels">
+                <span>$0</span>
+                <span>$1000</span>
+                <span>$2000</span>
+            </div>
+            <div id="goodsValue">$300 per month</div>
+        </div>
+        
+        <button id="calculate">Calculate My Footprint</button>
+        
+        <div id="result">
+            <h2>Your Carbon Footprint</h2>
+            
+            <div class="footprint-visual">
+                <svg id="footprintSvg" viewBox="0 0 200 200" width="200" height="200">
+                    <path d="M40,80 C40,40 80,40 100,40 C120,40 160,40 160,80 C160,120 140,140 130,160 C120,180 110,180 100,190 C90,180 80,180 70,160 C60,140 40,120 40,80 Z" fill="#4c9e4c" stroke="#006400" stroke-width="2"></path>
+                </svg>
+            </div>
+            
+            <div class="stat" id="totalFootprint">
+                <strong>Your total carbon footprint is: <span id="footprintValue">0</span> tonnes CO2e per year</strong>
+            </div>
+            
+            <div class="comparison">
+                <div class="comparison-item">
+                    <svg width="60" height="60" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="11" fill="#e6f7e6" stroke="#006400" stroke-width="1"/>
+                        <circle cx="12" cy="7" r="4" fill="#006400"/>
+                        <path d="M4,19 C4,14 8,12 12,12 C16,12 20,14 20,19" fill="#006400"/>
+                    </svg>
+                    <p>Average person: <br>7 tonnes CO2e</p>
+                </div>
+                <div class="comparison-item">
+                    <svg width="60" height="60" viewBox="0 0 24 24">
+                        <rect x="2" y="7" width="20" height="14" fill="#e6f7e6" stroke="#006400" stroke-width="1"/>
+                        <rect x="3" y="4" width="18" height="3" fill="#006400"/>
+                        <rect x="7" y="11" width="4" height="7" fill="#006400"/>
+                        <rect x="13" y="11" width="4" height="7" fill="#006400"/>
+                    </svg>
+                    <p>US average: <br>16 tonnes CO2e</p>
+                </div>
+                <div class="comparison-item">
+                    <svg width="60" height="60" viewBox="0 0 24 24">
+                        <path d="M12,2 L22,8 L22,16 L12,22 L2,16 L2,8 L12,2 Z" fill="#e6f7e6" stroke="#006400" stroke-width="1"/>
+                        <text x="12" y="16" font-size="8" text-anchor="middle" fill="#006400">2050</text>
+                    </svg>
+                    <p>2050 target: <br>2 tonnes CO2e</p>
+                </div>
+            </div>
+            
+            <div class="tips">
+                <h3>Personalized Tips to Reduce Your Footprint</h3>
+                <ul id="tipsList">
+                    <!-- Tips will be inserted here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update range input values
+            const transportationInput = document.getElementById('transportation');
+            const transportationValue = document.getElementById('transportationValue');
+            
+            transportationInput.addEventListener('input', function() {
+                transportationValue.textContent = this.value + " km per week";
+            });
+            
+            const energyInput = document.getElementById('energy');
+            const energyValue = document.getElementById('energyValue');
+            
+            energyInput.addEventListener('input', function() {
+                energyValue.textContent = this.value + " kWh per month";
+            });
+            
+            const flightsInput = document.getElementById('flights');
+            const flightsValue = document.getElementById('flightsValue');
+            
+            flightsInput.addEventListener('input', function() {
+                flightsValue.textContent = this.value + " flights per year";
+            });
+            
+            const goodsInput = document.getElementById('goods');
+            const goodsValue = document.getElementById('goodsValue');
+            
+            goodsInput.addEventListener('input', function() {
+                goodsValue.textContent = "$" + this.value + " per month";
+            });
+            
+            // Calculate button
+            const calculateButton = document.getElementById('calculate');
+            const resultSection = document.getElementById('result');
+            const footprintValue = document.getElementById('footprintValue');
+            const tipsList = document.getElementById('tipsList');
+            const footprintSvg = document.getElementById('footprintSvg');
+            
+            calculateButton.addEventListener('click', function() {
+                // Get values
+                const transportation = parseFloat(transportationInput.value);
+                const diet = document.getElementById('diet').value;
+                const energy = parseFloat(energyInput.value);
+                const flights = parseFloat(flightsInput.value);
+                const goods = parseFloat(goodsInput.value);
+                
+                // Calculate carbon footprint (simplified approximation)
+                const transportationEmissions = transportation * 52 * 0.0001; // weekly to yearly, approx. CO2 per km
+                
+                let dietFactor;
+                switch (diet) {
+                    case 'vegan': dietFactor = 1; break;
+                    case 'vegetarian': dietFactor = 1.4; break;
+                    case 'pescatarian': dietFactor = 1.7; break;
+                    case 'omnivore': dietFactor = 2.5; break;
+                    case 'highMeat': dietFactor = 3.3; break;
+                    default: dietFactor = 2.5;
+                }
+                
+                const dietEmissions = dietFactor * 0.8; // base diet emissions
+                const energyEmissions = energy * 12 * 0.0005; // monthly to yearly, approx. CO2 per kWh
+                const flightEmissions = flights * 0.7; // approx. CO2 per round trip flight
+                const goodsEmissions = goods * 12 * 0.0008; // monthly to yearly, approx. CO2 per dollar spent
+                
+                const totalEmissions = transportationEmissions + dietEmissions + energyEmissions + flightEmissions + goodsEmissions;
+                
+                // Display the result
+                footprintValue.textContent = totalEmissions.toFixed(1);
+                
+                // Resize footprint based on emissions
+                const baseSize = 200;
+                let scaleFactor = totalEmissions / 7; // 7 is the average
+                scaleFactor = Math.max(0.5, Math.min(scaleFactor, 2.5)); // Limit scale between 0.5 and 2.5
+                
+                const newWidth = baseSize * scaleFactor;
+                const newHeight = baseSize * scaleFactor;
+                
+                footprintSvg.setAttribute('width', newWidth);
+                footprintSvg.setAttribute('height', newHeight);
+                
+                // Color the footprint based on emissions
+                let footprintColor;
+                if (totalEmissions <= 2) {
+                    footprintColor = '#4caf50'; // Green for very low footprint
+                } else if (totalEmissions <= 7) {
+                    footprintColor = '#8bc34a'; // Light green for below average
+                } else if (totalEmissions <= 12) {
+                    footprintColor = '#ffc107'; // Yellow for average
+                } else if (totalEmissions <= 20) {
+                    footprintColor = '#ff9800'; // Orange for above average
+                } else {
+                    footprintColor = '#f44336'; // Red for high footprint
+                }
+                
+                footprintSvg.querySelector('path').setAttribute('fill', footprintColor);
+                
+                // Generate personalized tips
+                tipsList.innerHTML = '';
+                
+                if (transportationEmissions > 3) {
+                    addTip('Consider carpooling, using public transport, or switching to a more fuel-efficient vehicle to reduce your transportation emissions.');
+                }
+                
+                if (diet === 'highMeat' || diet === 'omnivore') {
+                    addTip('Reducing meat consumption, especially red meat, can significantly lower your carbon footprint.');
+                }
+                
+                if (energyEmissions > 2) {
+                    addTip('Switch to LED bulbs, improve home insulation, and consider renewable energy sources to reduce your energy emissions.');
+                }
+                
+                if (flightEmissions > 2) {
+                    addTip('Consider alternatives to flying when possible, such as trains for shorter trips, or combine purposes for necessary flights.');
+                }
+                
+                if (goodsEmissions > 3) {
+                    addTip('Practice conscious consumption: buy less, choose durable items, repair what you can, and consider second-hand options.');
+                }
+                
+                // Always add a general tip
+                addTip('Small changes add up! Even reducing your footprint by 10% makes a significant difference if everyone does it.');
+                
+                // Show the result section
+                resultSection.style.display = 'block';
+                
+                // Animate the result section into view
+                resultSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            function addTip(tipText) {
+                const tipItem = document.createElement('li');
+                tipItem.textContent = tipText;
+                tipsList.appendChild(tipItem);
+            }
+        });
+    </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
